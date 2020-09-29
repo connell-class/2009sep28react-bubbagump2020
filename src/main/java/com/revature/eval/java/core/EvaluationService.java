@@ -14,11 +14,13 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String reverse(String string) {
-		char[] reversed = new char[string.length()];
-		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
-			reversed[j] = string.charAt(i);
+		String newString = "";
+		String[] reversedString = string.split("");
+		for (int i = reversedString.length - 1; i >= 0; i--) {
+			newString = newString + reversedString[i];
 		}
-		return new String(reversed);
+		
+		return newString;
 	}
 
 	/**
