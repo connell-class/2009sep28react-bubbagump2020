@@ -231,8 +231,22 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String[] stringArray = string.split("[,\\s]");
+		String stringToCount = "";
+		Integer count = 0;
+		Map<String, Integer> hashedString = new HashMap<>();
+	
+		for(String element : stringArray) {
+			count = hashedString.get(element);
+			if(hashedString.get(element) == null) {
+				hashedString.put(element, 1);
+			} else {
+				count++;
+				hashedString.put(element, count);
+			}
+		}
+		
+		return hashedString;
 	}
 
 	/**
@@ -311,7 +325,6 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
 		String pigLatinPhrase = "";
 		List<String> pigLatinArrayList = new ArrayList<>();
 		String[] stringArray = string.toLowerCase().split(" ");
