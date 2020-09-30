@@ -3,6 +3,7 @@ package com.revature.eval.java.core;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 public class EvaluationService {
 
@@ -14,11 +15,13 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String reverse(String string) {
-		char[] reversed = new char[string.length()];
-		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
-			reversed[j] = string.charAt(i);
+		String newString = "";
+		String[] reversedString = string.split("");
+		for (int i = reversedString.length - 1; i >= 0; i--) {
+			newString = newString + reversedString[i];
 		}
-		return new String(reversed);
+		
+		return newString;
 	}
 
 	/**
@@ -91,17 +94,40 @@ public class EvaluationService {
 
 		public boolean isEquilateral() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo) {
+				if(sideTwo == sideThree) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
 		}
 
 		public boolean isIsosceles() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo) {
+				return true;
+			} else if(sideOne == sideThree) {
+				return true;
+			} else if(sideTwo == sideThree) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne != sideTwo) {
+				if(sideTwo != sideThree) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
 		}
 
 	}
@@ -122,8 +148,28 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int score = 0;
+		char[] charArray = string.toLowerCase().toCharArray();
+		for(char c : charArray) {
+			if(c == 'a' || c == 'e' || c == 'i' ||
+				c == 'o' || c == 'u' || c == 'l' || c == 'n' ||
+				c == 'r' || c == 's' || c == 't') {
+				score += 1;
+			} else if (c == 'd' || c == 'g') {
+				score += 2;
+			} else if (c == 'b' || c == 'c' || c == 'm' || c == 'p') {
+				score += 3;
+			} else if (c == 'f' || c == 'h' || c == 'v' || c == 'w' || c == 'y') {
+				score += 4;
+			} else if (c == 'k') {
+				score += 5;
+			} else if (c == 'j' || c == 'x') {
+				score += 8;
+			} else {
+				score += 10;
+			}
+		}
+		return score;
 	}
 
 	/**
@@ -158,8 +204,23 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String cleanNumber = "";
+		String[] stringNumArray = string.split("[()\\s-.]+");
+		for(String numElement : stringNumArray) {
+			String[] indiNum = numElement.split("");
+			for(String indiNumElement : indiNum) {
+				if(indiNumElement.matches("[^0123456789]")) {
+					throw new IllegalArgumentException();
+				} else {
+					cleanNumber = cleanNumber + indiNumElement;
+				}
+			}
+		}
+		if(cleanNumber.length() > 10) {
+			throw new IllegalArgumentException();
+		} else {
+			return cleanNumber;
+		}
 	}
 
 	/**
@@ -252,7 +313,10 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
+		// Not done yet
 		// TODO Write an implementation for this method declaration
+		String pigLatinPhrase = "";
+//		String[] stringArray = string.split();
 		return null;
 	}
 
@@ -272,8 +336,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		double numToCheck = 0;
+		String armstrongString = Integer.toString(input);
+		String[] armstrongArray = armstrongString.split("");
+		for(String armstrongElement : armstrongArray) {
+			int armStrongInt = Integer.parseInt(armstrongElement);
+			numToCheck = numToCheck + Math.pow(armStrongInt, armstrongArray.length);
+		}
+		if(numToCheck == input) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
