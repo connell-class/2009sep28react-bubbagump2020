@@ -1,9 +1,8 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
-import java.util.List;
-import java.util.Map;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class EvaluationService {
 
@@ -33,7 +32,6 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
 		String acro = "";
 		String[] stringArray = phrase.split("[-\\s]");
 		for(int i = 0; i < stringArray.length; i++) {
@@ -313,11 +311,43 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// Not done yet
 		// TODO Write an implementation for this method declaration
 		String pigLatinPhrase = "";
-//		String[] stringArray = string.split();
-		return null;
+		List<String> pigLatinArrayList = new ArrayList<>();
+		String[] stringArray = string.toLowerCase().split(" ");
+		
+		String patternString1 = "sch";
+		String patternString2 = "qu";
+		String patternString3 = "th";
+		
+		for(String stringElement : stringArray) {
+			StringBuilder sb = new StringBuilder(stringElement);
+			if(sb.substring(0, 1).matches("[aioue]")) {
+				pigLatinArrayList.add(stringElement.join("", stringElement, "ay"));
+			} else if (Pattern.matches(patternString1, sb.substring(0, 3))) {
+				String consonant = sb.substring(0, 3);
+				sb.delete(0, 3);
+				stringElement = sb.toString();
+				pigLatinArrayList.add(stringElement.join("", stringElement, consonant + "ay"));
+			} else if (Pattern.matches(patternString2, sb.substring(0, 2))) {
+				String consonant = sb.substring(0, 2);
+				sb.delete(0, 2);
+				stringElement = sb.toString();
+				pigLatinArrayList.add(stringElement.join("", stringElement, consonant + "ay"));
+			} else if (Pattern.matches(patternString3, sb.substring(0, 2))) {
+				String consonant = sb.substring(0, 2);
+				sb.delete(0, 2);
+				stringElement = sb.toString();
+				pigLatinArrayList.add(stringElement.join("", stringElement, consonant + "ay"));
+			} else {
+				String consonant = sb.substring(0, 1);
+				sb.deleteCharAt(0);
+				stringElement = sb.toString();
+				pigLatinArrayList.add(stringElement.join("", stringElement, consonant + "ay"));
+			}
+		}
+		pigLatinPhrase = pigLatinPhrase.join(" ", pigLatinArrayList);
+		return pigLatinPhrase;
 	}
 
 	/**
