@@ -3,6 +3,7 @@ package com.revature.eval.java.core;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 
 public class EvaluationService {
 
@@ -203,8 +204,23 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String cleanNumber = "";
+		String[] stringNumArray = string.split("[()\\s-.]+");
+		for(String numElement : stringNumArray) {
+			String[] indiNum = numElement.split("");
+			for(String indiNumElement : indiNum) {
+				if(indiNumElement.matches("[^0123456789]")) {
+					throw new IllegalArgumentException();
+				} else {
+					cleanNumber = cleanNumber + indiNumElement;
+				}
+			}
+		}
+		if(cleanNumber.length() > 10) {
+			throw new IllegalArgumentException();
+		} else {
+			return cleanNumber;
+		}
 	}
 
 	/**
@@ -297,7 +313,10 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
+		// Not done yet
 		// TODO Write an implementation for this method declaration
+		String pigLatinPhrase = "";
+//		String[] stringArray = string.split();
 		return null;
 	}
 
@@ -317,8 +336,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		double numToCheck = 0;
+		String armstrongString = Integer.toString(input);
+		String[] armstrongArray = armstrongString.split("");
+		for(String armstrongElement : armstrongArray) {
+			int armStrongInt = Integer.parseInt(armstrongElement);
+			numToCheck = numToCheck + Math.pow(armStrongInt, armstrongArray.length);
+		}
+		if(numToCheck == input) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
