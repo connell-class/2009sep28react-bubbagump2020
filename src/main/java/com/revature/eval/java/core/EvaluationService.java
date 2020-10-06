@@ -571,9 +571,35 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	// answered
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		// No Hyphens Full Number String
+		String[] hyphenatedString = string.split("[-\\s]");
+		String noHyphenString = "";
+		for(String element : hyphenatedString) {
+			noHyphenString += element;
+		}
+		// Checking the ISBN
+		int count = 10;
+		int iSBN = 0;
+		List<String> splitNoHyphenString = Arrays.asList(noHyphenString.split(""));
+		for(int i = 0; i < splitNoHyphenString.size(); i++) {
+			
+			if(splitNoHyphenString.get(i).equals("X")) {
+				splitNoHyphenString.set(i, "10");
+			}
+				try {
+					iSBN += count * Integer.parseInt(splitNoHyphenString.get(i));
+					count--;
+				} catch(Exception e){
+					
+				}
+		}
+		if(iSBN % 11 == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
