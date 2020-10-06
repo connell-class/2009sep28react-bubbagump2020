@@ -13,13 +13,13 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	// Answered
 	public String reverse(String string) {
 		String newString = "";
 		String[] reversedString = string.split("");
 		for (int i = reversedString.length - 1; i >= 0; i--) {
 			newString = newString + reversedString[i];
 		}
-		
 		return newString;
 	}
 
@@ -31,6 +31,7 @@ public class EvaluationService {
 	 * @param phrase
 	 * @return
 	 */
+	// Answered
 	public String acronym(String phrase) {
 		String acro = "";
 		String[] stringArray = phrase.split("[-\\s]");
@@ -50,6 +51,7 @@ public class EvaluationService {
 	 * different lengths.
 	 *
 	 */
+	// Answered
 	static class Triangle {
 		private double sideOne;
 		private double sideTwo;
@@ -127,7 +129,6 @@ public class EvaluationService {
 				return false;
 			}
 		}
-
 	}
 
 	/**
@@ -145,6 +146,7 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	// Answered
 	public int getScrabbleScore(String string) {
 		int score = 0;
 		char[] charArray = string.toLowerCase().toCharArray();
@@ -201,6 +203,7 @@ public class EvaluationService {
 	 * Note: As this exercise only deals with telephone numbers used in
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
+	// Answered
 	public String cleanPhoneNumber(String string) {
 		String cleanNumber = "";
 		String[] stringNumArray = string.split("[()\\s-.]+");
@@ -230,6 +233,7 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	// Answered
 	public Map<String, Integer> wordCount(String string) {
 		String[] stringArray = string.split("[,\\s]");
 		String stringToCount = "";
@@ -324,6 +328,7 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	// Answered
 	public String toPigLatin(String string) {
 		String pigLatinPhrase = "";
 		List<String> pigLatinArrayList = new ArrayList<>();
@@ -378,6 +383,7 @@ public class EvaluationService {
 	 * @param input
 	 * @return
 	 */
+	// Answered
 	public boolean isArmstrongNumber(int input) {
 		double numToCheck = 0;
 		String armstrongString = Integer.toString(input);
@@ -443,8 +449,36 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			// Building the cipher
+			char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+			char[] rotated = new char[alphabet.length];
+			Map<Character, Character> cipher = new HashMap<>();
+			for(int i = 0; i < alphabet.length; i++) {
+				rotated[(i + key) % alphabet.length] = alphabet[i];
+			}
+			for(int i = 0; i < alphabet.length; i++) {
+				cipher.put(rotated[i], alphabet[i]);
+			}
+			
+			// Using the cipher
+			String[] encryptedStringArray = string.split(" ");
+			String[] encryptedString = new String[encryptedStringArray.length];
+			int counter = 0;
+			for(String element : encryptedStringArray) {
+				char[] charArray = element.toCharArray();
+				for(int i = 0; i < charArray.length; i++) {
+					if(cipher.get(charArray[i]) == null) {
+						charArray[i] = ' ';
+					} else {
+						charArray[i] = cipher.get(charArray[i]);
+					}
+				}
+				element = new String(charArray);
+				encryptedString[counter] = element;
+				counter++;
+			}
+			string = String.join(" ", encryptedString);
+			return string;
 		}
 
 	}
@@ -627,9 +661,46 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+	
+	// answered
+	public boolean isLuhnValid(String string) throws NumberFormatException {
+		// No spaces full number string
+		String stringNumber = "";
+		String[] stringArray = string.split(" ");
+		for(String element : stringArray) {
+			stringNumber += element;
+		}
+		
+		// Doubling the every second number
+		List<String> stringNumberList = Arrays.asList(stringNumber.split(""));
+		int listCount = 1;
+		for(int i = 0; i < stringNumberList.size(); i++) {
+			if(listCount < stringNumberList.size()) {
+				int doubledNumber  = 0;
+				try {
+					doubledNumber = Integer.parseInt(stringNumberList.get(listCount)) * 2;
+					if(doubledNumber > 9) {
+						doubledNumber -= 9;
+					}
+				} catch(Exception e) {
+					
+				}
+				
+				String stringDoubledNumber = String.valueOf(doubledNumber);
+				stringNumberList.set(listCount, stringDoubledNumber);
+				listCount += 2;
+			}
+		}
+		// Summing all of the digits
+		int sum = 0;
+		for(String element : stringNumberList) {
+			sum += Integer.parseInt(element);
+		}
+		if(sum % 10 == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -659,9 +730,38 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	// Answered
+	public int solveWordProblem(String string) throws NumberFormatException {
+		String[] splitWordProblem = string.replaceAll("\\W, ", "").toLowerCase().split("[?\\s]");
+		int a = 0;
+		int b = 0;
+		String operation = "";
+		for(String element : splitWordProblem) {
+			try {
+				Integer.parseInt(element);
+				if(a == 0) {
+					a = Integer.parseInt(element);
+				} else {
+					b = Integer.parseInt(element);
+				}
+			} catch(Exception e) {
+				
+			}
+			if (element.equals("plus") || element.equals("minus") || element.equals("multiplied") || element.equals("divided")) {
+				operation = element;
+			}
+		}
+		switch(operation) {
+			case "plus":
+				return a + b;
+			case "minus":
+				return a - b;
+			case "multiplied":
+				return a * b;
+			case "divided":
+				return a / b;
+			default:
+				return 0;
+		}
 	}
-
 }
