@@ -409,9 +409,28 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
+	// answered
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> factorList = new ArrayList<>();
+		double longInputAsDouble = (double) l;
+		// check for twos
+		while(longInputAsDouble % 2 == 0) {
+			factorList.add(2L);
+			longInputAsDouble = longInputAsDouble / 2;
+		}
+		// check for odds
+		for(int i =3; i <= Math.sqrt(longInputAsDouble); i = i + 2) {
+			while(longInputAsDouble % i == 0) {
+				longInputAsDouble = longInputAsDouble / i;
+				factorList.add((long)i);
+				
+			}
+		}
+		if(longInputAsDouble > 2) {
+			long input = (long) longInputAsDouble;
+			factorList.add(input);
+		}
+		return factorList;
 	}
 
 	/**
