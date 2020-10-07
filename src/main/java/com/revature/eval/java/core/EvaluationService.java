@@ -495,9 +495,38 @@ public class EvaluationService {
 	 * @param i
 	 * @return
 	 */
-	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	// answered
+	public int calculateNthPrime(int i) throws IllegalArgumentException {
+		List<Integer> primeArray = new ArrayList<>();
+		primeArray.add(2);
+		primeArray.add(3);
+		int primeCount = 4;
+		
+		while(primeArray.size() < i) {
+			if(primeCount % 2 != 0 && primeCount % 3 != 0) {
+				int temporary = 4;
+				while(temporary * temporary <= primeCount) {
+					if(primeCount % temporary == 0) {
+						break;
+					}
+					temporary++;
+				}
+				if(temporary * temporary > primeCount) {
+					primeArray.add(primeCount);
+				}
+			}
+			primeCount++;
+		}
+		System.out.println(primeArray);
+		if(i == 0) {
+			throw new IllegalArgumentException();
+		} else if(i == 1){
+			return 2;
+		}else if(i == 2){
+			return 3;
+		} else {
+			return primeArray.get(primeArray.size() - 1);
+		}
 	}
 
 	/**
