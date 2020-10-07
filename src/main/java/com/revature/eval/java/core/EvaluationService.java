@@ -292,7 +292,16 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
+			T key = t;
+			Map<Integer, T> binaryMap = new TreeMap<>();
+			for(int i = 0; i < getSortedList().size(); i++) {
+				binaryMap.put(i, getSortedList().get(i));
+			}
+			for(int i = 0; i < binaryMap.size(); i++) {
+				if(binaryMap.get(i).equals(key)) {
+					return i;
+				}
+			}
 			return 0;
 		}
 
