@@ -292,7 +292,16 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
+			T key = t;
+			Map<Integer, T> binaryMap = new TreeMap<>();
+			for(int i = 0; i < getSortedList().size(); i++) {
+				binaryMap.put(i, getSortedList().get(i));
+			}
+			for(int i = 0; i < binaryMap.size(); i++) {
+				if(binaryMap.get(i).equals(key)) {
+					return i;
+				}
+			}
 			return 0;
 		}
 
@@ -409,9 +418,28 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
+	// answered
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> factorList = new ArrayList<>();
+		double longInputAsDouble = (double) l;
+		// check for twos
+		while(longInputAsDouble % 2 == 0) {
+			factorList.add(2L);
+			longInputAsDouble = longInputAsDouble / 2;
+		}
+		// check for odds
+		for(int i =3; i <= Math.sqrt(longInputAsDouble); i = i + 2) {
+			while(longInputAsDouble % i == 0) {
+				longInputAsDouble = longInputAsDouble / i;
+				factorList.add((long)i);
+				
+			}
+		}
+		if(longInputAsDouble > 2) {
+			long input = (long) longInputAsDouble;
+			factorList.add(input);
+		}
+		return factorList;
 	}
 
 	/**
@@ -495,9 +523,38 @@ public class EvaluationService {
 	 * @param i
 	 * @return
 	 */
-	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	// answered
+	public int calculateNthPrime(int i) throws IllegalArgumentException {
+		List<Integer> primeArray = new ArrayList<>();
+		primeArray.add(2);
+		primeArray.add(3);
+		int primeCount = 4;
+		
+		while(primeArray.size() < i) {
+			if(primeCount % 2 != 0 && primeCount % 3 != 0) {
+				int temporary = 4;
+				while(temporary * temporary <= primeCount) {
+					if(primeCount % temporary == 0) {
+						break;
+					}
+					temporary++;
+				}
+				if(temporary * temporary > primeCount) {
+					primeArray.add(primeCount);
+				}
+			}
+			primeCount++;
+		}
+		System.out.println(primeArray);
+		if(i == 0) {
+			throw new IllegalArgumentException();
+		} else if(i == 1){
+			return 2;
+		}else if(i == 2){
+			return 3;
+		} else {
+			return primeArray.get(primeArray.size() - 1);
+		}
 	}
 
 	/**
@@ -571,9 +628,35 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	// answered
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		// No Hyphens Full Number String
+		String[] hyphenatedString = string.split("[-\\s]");
+		String noHyphenString = "";
+		for(String element : hyphenatedString) {
+			noHyphenString += element;
+		}
+		// Checking the ISBN
+		int count = 10;
+		int iSBN = 0;
+		List<String> splitNoHyphenString = Arrays.asList(noHyphenString.split(""));
+		for(int i = 0; i < splitNoHyphenString.size(); i++) {
+			
+			if(splitNoHyphenString.get(i).equals("X")) {
+				splitNoHyphenString.set(i, "10");
+			}
+				try {
+					iSBN += count * Integer.parseInt(splitNoHyphenString.get(i));
+					count--;
+				} catch(Exception e){
+					
+				}
+		}
+		if(iSBN % 11 == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
