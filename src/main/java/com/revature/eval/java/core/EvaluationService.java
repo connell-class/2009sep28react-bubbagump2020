@@ -1,13 +1,20 @@
 package com.revature.eval.java.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 public class EvaluationService {
@@ -712,9 +719,27 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	//answered
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		boolean isPangram = false;
+		// check if empty string, return false if true
+		if(string.equals("")) {
+			return false;
+		}
+		// clear the string of whitespace
+		string = string.replaceAll("[\\s]", "");
+		// break the string to each char
+		String[] stringArray = string.split("");
+		Set<String> sortedChar = new TreeSet<>();
+		// add each char to the set. due to the non duplicative nature of sets, duplicate chars will not be added
+		for(String element : stringArray) {
+			sortedChar.add(element);
+		}
+		// finally, check if the length of the set is equal to the length of the alphabet
+		if(sortedChar.size() == 26) {
+			isPangram = true;
+		}
+		return isPangram;
 	}
 
 	/**
@@ -726,8 +751,34 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		long gigaSecond = 1000000000l;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH");
+		SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		Date date = null;
+		try {
+			while(date == null) {
+				date = sdf.parse(given.toString());
+				date = sdf2.parse(given.toString());
+			}
+		} catch (ParseException e) {}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int month = cal.get(Calendar.MONTH);
+		if(month == 0) {
+			month = 1;
+		}
+		LocalDateTime ldt = 
+				LocalDateTime.of(
+					cal.get(Calendar.YEAR),
+					month,
+					cal.get(Calendar.DAY_OF_MONTH),
+					cal.get(Calendar.HOUR_OF_DAY),
+					cal.get(Calendar.MINUTE),
+					cal.get(Calendar.SECOND)
+				);
+		ldt = ldt.plusSeconds(gigaSecond);
+		return ldt;
 	}
 
 	/**
