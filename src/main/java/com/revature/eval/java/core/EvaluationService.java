@@ -1,7 +1,13 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class EvaluationService {
@@ -288,18 +294,23 @@ public class EvaluationService {
 	 * binary search is a dichotomic divide and conquer search algorithm.
 	 * 
 	 */
-	static class BinarySearch<T> {
+	// answered
+	static class BinarySearch<T extends Comparable<T>> {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
 			T key = t;
-			Map<Integer, T> binaryMap = new TreeMap<>();
-			for(int i = 0; i < getSortedList().size(); i++) {
-				binaryMap.put(i, getSortedList().get(i));
-			}
-			for(int i = 0; i < binaryMap.size(); i++) {
-				if(binaryMap.get(i).equals(key)) {
-					return i;
+			int high = getSortedList().size() - 1;
+			int low = 0;
+			while(high >= low) {
+				int middle = (high + low) / 2;
+				T middleValue = getSortedList().get(middle);
+				if(getSortedList().get(middle).equals(key)) {
+					return middle;
+				} else if(key.compareTo(middleValue) < 0) {
+					high = middle - 1;
+				} else if(key.compareTo(middleValue) > 0) {
+					low = middle + 1;
 				}
 			}
 			return 0;
@@ -468,6 +479,7 @@ public class EvaluationService {
 	 * gur ynml qbt. ROT13 Gur dhvpx oebja sbk whzcf bire gur ynml qbt. gives The
 	 * quick brown fox jumps over the lazy dog.
 	 */
+	// half answered
 	static class RotationalCipher {
 		private int key;
 
@@ -589,9 +601,37 @@ public class EvaluationService {
 		 * @param string
 		 * @return
 		 */
+		// in progress
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			// creating upper and lower alphabet
+			String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			string = string.replaceAll(" ", "").toUpperCase();
+			int stringLength = string.length();
+			int alphabetLength = alphabet.length();
+			String encryptedString = "";
+			
+			// encrypting the string
+			for(int i = 0; i < stringLength; i++) {
+				char stringChar = string.charAt(i);
+				for(int j = 0; j < alphabetLength; j++) {
+					char alphaChar = alphabet.charAt(j);
+					if(stringChar == alphaChar) {
+						int index = alphabet.indexOf(alphaChar);
+						int charPosition = (alphabetLength - 1) - index;
+						encryptedString += alphabet.charAt(charPosition);
+					}
+				}
+			}
+			
+			// fixing strings to have substring of 5 characters long
+			String sb = "";
+			
+			List<String> subStrList = new ArrayList<>();
+			for(int i = 0; i < encryptedString.length(); i += 5) {
+				subStrList.add(encryptedString.substring(i, i + 5).toLowerCase());
+			}
+			sb = String.join(" ", subStrList);
+			return sb;
 		}
 
 		/**
@@ -703,9 +743,23 @@ public class EvaluationService {
 	 * @param set
 	 * @return
 	 */
+	// answered
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int sum = 0;
+		Set<Integer> numSet = new LinkedHashSet<>();
+		for(int j = 0; j < set.length; j++) {
+			for(int k = 1; k < i; k++) {
+				if(k * set[j] < i) {
+					numSet.add(k * set[j]);
+				}
+			}
+		}
+		List<Integer> numList = new ArrayList<>();
+		numList.addAll(numSet);
+		for(Integer element : numList) {
+			sum += element;
+		}
+		return sum;
 	}
 
 	/**
