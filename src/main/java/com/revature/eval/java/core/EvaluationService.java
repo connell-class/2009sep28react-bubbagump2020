@@ -248,6 +248,7 @@ public class EvaluationService {
 	 */
 	// Answered
 	public Map<String, Integer> wordCount(String string) {
+		string = string.replaceAll("[\n]", "");
 		String[] stringArray = string.split("[,\\s]");
 		String stringToCount = "";
 		Integer count = 0;
