@@ -1,9 +1,8 @@
 package com.revature.eval.java.core;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -520,7 +519,6 @@ public class EvaluationService {
 			String[] stringArray = string.split(" ");
 			List<String> list = new ArrayList<>();
 			for(String element : stringArray) {
-				System.out.println(element);
 				String newElement = "";
 //				 successfully translates with punctuation.
 				for(char charElement : element.toCharArray()) {
@@ -577,7 +575,6 @@ public class EvaluationService {
 			}
 			primeCount++;
 		}
-		System.out.println(primeArray);
 		if(i == 0) {
 			throw new IllegalArgumentException();
 		} else if(i == 1){
@@ -642,7 +639,6 @@ public class EvaluationService {
 				}
 					
 			}
-			System.out.println(encryptedString);
 			List<String> fiveLetterBlocks = new ArrayList<>();
 			for(int i  = 0; i < encryptedString.length(); i+=BLOCK_SIZE) {
 				
@@ -779,35 +775,10 @@ public class EvaluationService {
 	 * @param given
 	 * @return
 	 */
+	// Answered with Errors
 	public Temporal getGigasecondDate(Temporal given) {
 		long gigaSecond = 1000000000l;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd'T'HH");
-		SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = null;
-		try {
-			while(date == null) {
-				date = sdf.parse(given.toString());
-				date = sdf2.parse(given.toString());
-			}
-		} catch (ParseException e) {}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		int month = cal.get(Calendar.MONTH);
-		if(month == 0) {
-			month = 1;
-		}
-		LocalDateTime ldt = 
-				LocalDateTime.of(
-					cal.get(Calendar.YEAR),
-					month,
-					cal.get(Calendar.DAY_OF_MONTH),
-					cal.get(Calendar.HOUR_OF_DAY),
-					cal.get(Calendar.MINUTE),
-					cal.get(Calendar.SECOND)
-				);
-		ldt = ldt.plusSeconds(gigaSecond);
-		return ldt;
+		return given.plus(gigaSecond, ChronoUnit.SECONDS);
 	}
 
 	/**
