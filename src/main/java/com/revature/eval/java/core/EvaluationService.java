@@ -609,37 +609,36 @@ public class EvaluationService {
 		 * @param string
 		 * @return
 		 */
-		// in progress
+		// answered
 		public static String encode(String string) {
-			// creating upper and lower alphabet
-			String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			string = string.replaceAll(" ", "").toUpperCase();
-			int stringLength = string.length();
-			int alphabetLength = alphabet.length();
-			String encryptedString = "";
-			
-			// encrypting the string
-			for(int i = 0; i < stringLength; i++) {
-				char stringChar = string.charAt(i);
-				for(int j = 0; j < alphabetLength; j++) {
-					char alphaChar = alphabet.charAt(j);
-					if(stringChar == alphaChar) {
-						int index = alphabet.indexOf(alphaChar);
-						int charPosition = (alphabetLength - 1) - index;
-						encryptedString += alphabet.charAt(charPosition);
-					}
+			final int BLOCK_SIZE = 5;
+			final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+			final String REVERSE_ALPHABET = "zyxwvutsrqponmlkjihgfedcba";
+			String strippedString ="";
+			String encryptedString ="";
+			for(char c : string.toCharArray()) {
+				if(Character.isLetterOrDigit(c)) {
+					strippedString += c;
 				}
 			}
-			
-			// fixing strings to have substring of 5 characters long
-			String sb = "";
-			
-			List<String> subStrList = new ArrayList<>();
-			for(int i = 0; i < encryptedString.length(); i += 5) {
-				subStrList.add(encryptedString.substring(i, i + 5).toLowerCase());
+			for(char c : strippedString.toLowerCase().toCharArray()) {
+				int index = ALPHABET.indexOf(c);
+				if(Character.isDigit(c)) {
+					encryptedString += c;
+				}
+				if(index >=  0) {
+						encryptedString += REVERSE_ALPHABET.toCharArray()[index];
+				}
+					
 			}
-			sb = String.join(" ", subStrList);
-			return sb;
+			System.out.println(encryptedString);
+			List<String> fiveLetterBlocks = new ArrayList<>();
+			for(int i  = 0; i < encryptedString.length(); i+=BLOCK_SIZE) {
+				
+				fiveLetterBlocks.add(i + BLOCK_SIZE <= encryptedString.length() ? encryptedString.substring(i, i + BLOCK_SIZE) : encryptedString.substring(i));
+			}
+			encryptedString = String.join(" ", fiveLetterBlocks);
+			return encryptedString;
 		}
 
 		/**
@@ -649,8 +648,19 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			StringBuilder decoded = new StringBuilder();
+			for(char c : string.toCharArray()) {
+				System.out.println(c);
+				if(Character.isLetter(c)) {
+					int newCharacter = ('Z' - c) + 'A';
+					System.out.print(newCharacter);
+					decoded.append((char) newCharacter);
+				} else {
+					decoded.append(c);
+				}
+			}
+			
+			return decoded.toString();
 		}
 	}
 
