@@ -1,7 +1,19 @@
 package com.revature.eval.java.core;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 public class EvaluationService {
@@ -235,6 +247,7 @@ public class EvaluationService {
 	 */
 	// Answered
 	public Map<String, Integer> wordCount(String string) {
+		string = string.replaceAll("[\n]", "");
 		String[] stringArray = string.split("[,\\s]");
 		String stringToCount = "";
 		Integer count = 0;
@@ -288,18 +301,23 @@ public class EvaluationService {
 	 * binary search is a dichotomic divide and conquer search algorithm.
 	 * 
 	 */
-	static class BinarySearch<T> {
+	// answered
+	static class BinarySearch<T extends Comparable<T>> {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
 			T key = t;
-			Map<Integer, T> binaryMap = new TreeMap<>();
-			for(int i = 0; i < getSortedList().size(); i++) {
-				binaryMap.put(i, getSortedList().get(i));
-			}
-			for(int i = 0; i < binaryMap.size(); i++) {
-				if(binaryMap.get(i).equals(key)) {
-					return i;
+			int high = getSortedList().size() - 1;
+			int low = 0;
+			while(high >= low) {
+				int middle = (high + low) / 2;
+				T middleValue = getSortedList().get(middle);
+				if(getSortedList().get(middle).equals(key)) {
+					return middle;
+				} else if(key.compareTo(middleValue) < 0) {
+					high = middle - 1;
+				} else if(key.compareTo(middleValue) > 0) {
+					low = middle + 1;
 				}
 			}
 			return 0;
@@ -468,6 +486,7 @@ public class EvaluationService {
 	 * gur ynml qbt. ROT13 Gur dhvpx oebja sbk whzcf bire gur ynml qbt. gives The
 	 * quick brown fox jumps over the lazy dog.
 	 */
+	// successfully answered
 	static class RotationalCipher {
 		private int key;
 
@@ -479,7 +498,9 @@ public class EvaluationService {
 		public String rotate(String string) {
 			// Building the cipher
 			char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+			char[] upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 			char[] rotated = new char[alphabet.length];
+			char[] rotatedUpper = new char[upperAlphabet.length];
 			Map<Character, Character> cipher = new HashMap<>();
 			for(int i = 0; i < alphabet.length; i++) {
 				rotated[(i + key) % alphabet.length] = alphabet[i];
@@ -487,25 +508,34 @@ public class EvaluationService {
 			for(int i = 0; i < alphabet.length; i++) {
 				cipher.put(rotated[i], alphabet[i]);
 			}
-			
-			// Using the cipher
-			String[] encryptedStringArray = string.split(" ");
-			String[] encryptedString = new String[encryptedStringArray.length];
-			int counter = 0;
-			for(String element : encryptedStringArray) {
-				char[] charArray = element.toCharArray();
-				for(int i = 0; i < charArray.length; i++) {
-					if(cipher.get(charArray[i]) == null) {
-						charArray[i] = ' ';
-					} else {
-						charArray[i] = cipher.get(charArray[i]);
-					}
-				}
-				element = new String(charArray);
-				encryptedString[counter] = element;
-				counter++;
+			Map<Character, Character> upperCipher = new HashMap<>();
+			for(int i = 0; i < upperAlphabet.length; i++) {
+				rotatedUpper[(i + key) % upperAlphabet.length] = upperAlphabet[i];
 			}
-			string = String.join(" ", encryptedString);
+			for(int i = 0; i < upperAlphabet.length; i++) {
+				upperCipher.put(rotatedUpper[i], upperAlphabet[i]);
+			}
+			// Using the cipher
+			String[] stringArray = string.split(" ");
+			List<String> list = new ArrayList<>();
+			for(String element : stringArray) {
+				String newElement = "";
+//				 successfully translates with punctuation.
+				for(char charElement : element.toCharArray()) {
+					if(cipher.get(charElement) == null) {
+						if(upperCipher.get(charElement) == null) {
+							newElement+=charElement;
+						}else {
+							newElement+=upperCipher.get(charElement);
+						}
+					} else {
+						newElement+=cipher.get(charElement);
+					}
+					
+				}
+				list.add(newElement);
+			}
+			string = String.join(" ", list);
 			return string;
 		}
 
@@ -545,7 +575,6 @@ public class EvaluationService {
 			}
 			primeCount++;
 		}
-		System.out.println(primeArray);
 		if(i == 0) {
 			throw new IllegalArgumentException();
 		} else if(i == 1){
@@ -582,16 +611,41 @@ public class EvaluationService {
 	 *
 	 */
 	static class AtbashCipher {
-
+		final static int BLOCK_SIZE = 5;
+		final static String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+		final static String REVERSE_ALPHABET = "zyxwvutsrqponmlkjihgfedcba";
 		/**
 		 * Question 13
 		 * 
 		 * @param string
 		 * @return
 		 */
+		// answered
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String strippedString ="";
+			String encryptedString ="";
+			for(char c : string.toCharArray()) {
+				if(Character.isLetterOrDigit(c)) {
+					strippedString += c;
+				}
+			}
+			for(char c : strippedString.toLowerCase().toCharArray()) {
+				int index = ALPHABET.indexOf(c);
+				if(Character.isDigit(c)) {
+					encryptedString += c;
+				}
+				if(index >=  0) {
+						encryptedString += REVERSE_ALPHABET.toCharArray()[index];
+				}
+					
+			}
+			List<String> fiveLetterBlocks = new ArrayList<>();
+			for(int i  = 0; i < encryptedString.length(); i+=BLOCK_SIZE) {
+				
+				fiveLetterBlocks.add(i + BLOCK_SIZE <= encryptedString.length() ? encryptedString.substring(i, i + BLOCK_SIZE) : encryptedString.substring(i));
+			}
+			encryptedString = String.join(" ", fiveLetterBlocks);
+			return encryptedString;
 		}
 
 		/**
@@ -600,9 +654,27 @@ public class EvaluationService {
 		 * @param string
 		 * @return
 		 */
+		// answered
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String decryptedString = "";
+			String strippedStringToDecrypt = string.toLowerCase();
+			for(char c : strippedStringToDecrypt.toCharArray()) {
+				if(Character.isLetterOrDigit(c)) {
+					strippedStringToDecrypt += c;
+				}
+			}
+			for(char c : strippedStringToDecrypt.toCharArray()) {
+				int index = REVERSE_ALPHABET.indexOf(c);
+				if(Character.isDigit(c)) {
+					decryptedString += c;
+				}
+				
+				if(index >= 0) {
+					decryptedString += ALPHABET.toCharArray()[index];
+				}
+			}
+			String thisString = decryptedString.substring(0, (decryptedString.length() / 2));
+			return thisString;
 		}
 	}
 
@@ -672,9 +744,27 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	//answered
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		boolean isPangram = false;
+		// check if empty string, return false if true
+		if(string.equals("")) {
+			return false;
+		}
+		// clear the string of whitespace
+		string = string.replaceAll("[\\s]", "");
+		// break the string to each char
+		String[] stringArray = string.split("");
+		Set<String> sortedChar = new TreeSet<>();
+		// add each char to the set. due to the non duplicative nature of sets, duplicate chars will not be added
+		for(String element : stringArray) {
+			sortedChar.add(element);
+		}
+		// finally, check if the length of the set is equal to the length of the alphabet
+		if(sortedChar.size() == 26) {
+			isPangram = true;
+		}
+		return isPangram;
 	}
 
 	/**
@@ -685,9 +775,10 @@ public class EvaluationService {
 	 * @param given
 	 * @return
 	 */
+	// Answered with Errors
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		long gigaSecond = 1000000000l;
+		return given.plus(gigaSecond, ChronoUnit.SECONDS);
 	}
 
 	/**
@@ -703,9 +794,23 @@ public class EvaluationService {
 	 * @param set
 	 * @return
 	 */
+	// answered
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int sum = 0;
+		Set<Integer> numSet = new LinkedHashSet<>();
+		for(int j = 0; j < set.length; j++) {
+			for(int k = 1; k < i; k++) {
+				if(k * set[j] < i) {
+					numSet.add(k * set[j]);
+				}
+			}
+		}
+		List<Integer> numList = new ArrayList<>();
+		numList.addAll(numSet);
+		for(Integer element : numList) {
+			sum += element;
+		}
+		return sum;
 	}
 
 	/**
