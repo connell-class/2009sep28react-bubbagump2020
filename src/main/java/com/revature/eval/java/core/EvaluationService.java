@@ -487,7 +487,7 @@ public class EvaluationService {
 	 * gur ynml qbt. ROT13 Gur dhvpx oebja sbk whzcf bire gur ynml qbt. gives The
 	 * quick brown fox jumps over the lazy dog.
 	 */
-	// half answered
+	// successfully answered
 	static class RotationalCipher {
 		private int key;
 
@@ -499,7 +499,9 @@ public class EvaluationService {
 		public String rotate(String string) {
 			// Building the cipher
 			char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+			char[] upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 			char[] rotated = new char[alphabet.length];
+			char[] rotatedUpper = new char[upperAlphabet.length];
 			Map<Character, Character> cipher = new HashMap<>();
 			for(int i = 0; i < alphabet.length; i++) {
 				rotated[(i + key) % alphabet.length] = alphabet[i];
@@ -507,25 +509,35 @@ public class EvaluationService {
 			for(int i = 0; i < alphabet.length; i++) {
 				cipher.put(rotated[i], alphabet[i]);
 			}
-			
-			// Using the cipher
-			String[] encryptedStringArray = string.split(" ");
-			String[] encryptedString = new String[encryptedStringArray.length];
-			int counter = 0;
-			for(String element : encryptedStringArray) {
-				char[] charArray = element.toCharArray();
-				for(int i = 0; i < charArray.length; i++) {
-					if(cipher.get(charArray[i]) == null) {
-						charArray[i] = ' ';
-					} else {
-						charArray[i] = cipher.get(charArray[i]);
-					}
-				}
-				element = new String(charArray);
-				encryptedString[counter] = element;
-				counter++;
+			Map<Character, Character> upperCipher = new HashMap<>();
+			for(int i = 0; i < upperAlphabet.length; i++) {
+				rotatedUpper[(i + key) % upperAlphabet.length] = upperAlphabet[i];
 			}
-			string = String.join(" ", encryptedString);
+			for(int i = 0; i < upperAlphabet.length; i++) {
+				upperCipher.put(rotatedUpper[i], upperAlphabet[i]);
+			}
+			// Using the cipher
+			String[] stringArray = string.split(" ");
+			List<String> list = new ArrayList<>();
+			for(String element : stringArray) {
+				System.out.println(element);
+				String newElement = "";
+//				 successfully translates with punctuation.
+				for(char charElement : element.toCharArray()) {
+					if(cipher.get(charElement) == null) {
+						if(upperCipher.get(charElement) == null) {
+							newElement+=charElement;
+						}else {
+							newElement+=upperCipher.get(charElement);
+						}
+					} else {
+						newElement+=cipher.get(charElement);
+					}
+					
+				}
+				list.add(newElement);
+			}
+			string = String.join(" ", list);
 			return string;
 		}
 
