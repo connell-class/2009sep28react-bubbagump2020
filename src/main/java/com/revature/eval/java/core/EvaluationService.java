@@ -602,7 +602,9 @@ public class EvaluationService {
 	 *
 	 */
 	static class AtbashCipher {
-
+		final static int BLOCK_SIZE = 5;
+		final static String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+		final static String REVERSE_ALPHABET = "zyxwvutsrqponmlkjihgfedcba";
 		/**
 		 * Question 13
 		 * 
@@ -611,9 +613,6 @@ public class EvaluationService {
 		 */
 		// answered
 		public static String encode(String string) {
-			final int BLOCK_SIZE = 5;
-			final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-			final String REVERSE_ALPHABET = "zyxwvutsrqponmlkjihgfedcba";
 			String strippedString ="";
 			String encryptedString ="";
 			for(char c : string.toCharArray()) {
@@ -647,20 +646,27 @@ public class EvaluationService {
 		 * @param string
 		 * @return
 		 */
+		// answered
 		public static String decode(String string) {
-			StringBuilder decoded = new StringBuilder();
-			for(char c : string.toCharArray()) {
-				System.out.println(c);
-				if(Character.isLetter(c)) {
-					int newCharacter = ('Z' - c) + 'A';
-					System.out.print(newCharacter);
-					decoded.append((char) newCharacter);
-				} else {
-					decoded.append(c);
+			String decryptedString = "";
+			String strippedStringToDecrypt = string.toLowerCase();
+			for(char c : strippedStringToDecrypt.toCharArray()) {
+				if(Character.isLetterOrDigit(c)) {
+					strippedStringToDecrypt += c;
 				}
 			}
-			
-			return decoded.toString();
+			for(char c : strippedStringToDecrypt.toCharArray()) {
+				int index = REVERSE_ALPHABET.indexOf(c);
+				if(Character.isDigit(c)) {
+					decryptedString += c;
+				}
+				
+				if(index >= 0) {
+					decryptedString += ALPHABET.toCharArray()[index];
+				}
+			}
+			String thisString = decryptedString.substring(0, (decryptedString.length() / 2));
+			return thisString;
 		}
 	}
 
